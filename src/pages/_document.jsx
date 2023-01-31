@@ -36,25 +36,32 @@ const modeScript = `
 `
 
 export default function Document() {
-  return (
-    <Html className="h-full antialiased" lang="en">
-      <Head>
-        <script dangerouslySetInnerHTML={{ __html: modeScript }} />
-        <link
-          rel="alternate"
-          type="application/rss+xml"
-          href={`${process.env.NEXT_PUBLIC_SITE_URL}/rss/feed.xml`}
-        />
-        <link
-          rel="alternate"
-          type="application/feed+json"
-          href={`${process.env.NEXT_PUBLIC_SITE_URL}/rss/feed.json`}
-        />
-      </Head>
-      <body className="flex h-full flex-col bg-zinc-50 dark:bg-black">
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
-  )
+  async function getInitialProps(ctx) {
+    const initialProps = await Document.getInitialProps(ctx)
+    return { ...initialProps, locale: ctx?.locale || 'en' }
+  }
+
+  {
+    return (
+      <Html className="h-full antialiased" lang='en'>
+        <Head>
+          <script dangerouslySetInnerHTML={{ __html: modeScript }} />
+          <link
+            rel="alternate"
+            type="application/rss+xml"
+            href={`${process.env.NEXT_PUBLIC_SITE_URL}/rss/feed.xml`}
+          />
+          <link
+            rel="alternate"
+            type="application/feed+json"
+            href={`${process.env.NEXT_PUBLIC_SITE_URL}/rss/feed.json`}
+          />
+        </Head>
+        <body className="flex h-full flex-col bg-zinc-50 dark:bg-black">
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    )
+  }
 }
